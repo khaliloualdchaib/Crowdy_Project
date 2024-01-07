@@ -1,0 +1,8 @@
+.active {
+    background-color: #007bff; 
+    color: #fff; 
+  }
+.text {
+    color: #fff;
+    box-sizing: border-box;
+}

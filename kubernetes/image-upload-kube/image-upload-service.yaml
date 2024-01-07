@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: image-upload-service
+  labels:
+    app.kubernetes.io/name: image-upload-app
+    app.kubernetes.io/instance: image-upload-deploy
+spec:
+  selector:
+    app.kubernetes.io/name: image-upload-app
+    app.kubernetes.io/instance: image-upload-deploy
+  ports:
+    - port: 8001
+      targetPort: 8001
+  type: NodePort

@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: head-count-deploy
+  labels:
+    app.kubernetes.io/name: head-counting-app
+    app.kubernetes.io/instance: head-count-deploy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: head-counting-app
+      app.kubernetes.io/instance: head-count-deploy
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: head-counting-app
+        app.kubernetes.io/instance: head-count-deploy
+    spec:
+      containers:
+        - name: head-counting-app
+          image: head-counting-service:counter
+          ports:
+            - containerPort: 8002

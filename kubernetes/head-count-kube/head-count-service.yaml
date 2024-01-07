@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: head-count-service
+  labels:
+    app.kubernetes.io/name: head-counting-app
+    app.kubernetes.io/instance: head-count-deploy
+spec:
+  selector:
+    app.kubernetes.io/name: head-counting-app
+    app.kubernetes.io/instance: head-count-deploy
+  ports:
+    - port: 8002
+      targetPort: 8002
+  type: ClusterIP
