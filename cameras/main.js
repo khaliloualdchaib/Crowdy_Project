@@ -5,7 +5,7 @@ const { switchMap, map } = require('rxjs/operators');
 const axios = require('axios');
 const FormData = require('form-data');
 
-const imageUrl = 'http://localhost:30180/crowdy/image/upload';
+const imageUrl = 'http://localhost:30001/crowdy/image/upload';
 const imagesDirectory = path.join(__dirname, 'images_test');
 const sendImage = async (cameraId, image) => {
   try {
@@ -50,7 +50,6 @@ const camera4$ = interval(60000).pipe(
   switchMap(({ cameraId, image }) => sendImage(cameraId, image))
 );
 
-// Subscribe to the observables (simulating the continuous operation)
 camera1$.subscribe();
 camera2$.subscribe();
 camera3$.subscribe();

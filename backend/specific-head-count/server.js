@@ -29,18 +29,6 @@ CameraCount$.subscribe(async (imageData) => {
     console.log(imageData)
 })
 
-
-/*
-const cameraDataStream = cameraSubject.pipe(
-    bufferTime(5000),
-    filter(dataArray => dataArray.length > 0),
-    mergeMap(dataArray => dataArray),
-    scan((acc, data) => {
-        acc.set(data.cameraId, { photo: data.photo, count: data.count });
-        return acc;
-    }, new Map())
-);
-*/
 app.listen(port, () => {
     console.log(`specific head count server running on port ${port}`);
 });

@@ -1,14 +1,17 @@
 const express = require('express');
 const { Observable } = require('rxjs');
 const { bufferTime, map } = require('rxjs/operators');
+const http = require('http');
+const socketIo = require('socket.io');
 
 const port = process.env.PORT;
 const app = express();
+const server = http.createServer(app);
+const io = socketIo(server);
 
 app.use(express.json());
 
 let totalCount = 0;
-
 
 const TotalheadCount$ = new Observable((observer) => {
     app.post("/crowdy/global/count", async (req, res) => {
@@ -16,6 +19,7 @@ const TotalheadCount$ = new Observable((observer) => {
         console.log(`Received head count update: ${count}`);
         observer.next(count);
         res.status(200).json({ status: "success" });
+        io.emit('totalCountUpdate', totalCount); // Emit the total count to all connected clients
     });
 });
 
@@ -24,20 +28,16 @@ const headCountStream$ = TotalheadCount$.pipe(
     map(dataArray => dataArray.reduce((acc, count) => acc + count, 0))
 );
 
-headCountStream$.subscribe(async (count) =>{
+headCountStream$.subscribe(async (count) => {
     totalCount += count
     console.log('Total Count:', totalCount);
 });
 
-/* 
-// Periodically send the aggregated head count data to a hypothetical frontend
-interval(5000).subscribe(() => {
-    const now = new Date();
-    console.log(`Sending aggregated head count data at ${now}`);
-    // In a real scenario, you would send this data to your frontend using a WebSocket or another real-time communication method.
+io.on('connection', (socket) => {
+    console.log('Client connected');
+    socket.emit('totalCountUpdate', totalCount);
 });
-*/
 
-app.listen(port, () => {
+server.listen(port, () => {
     console.log(`Global head counting server running on port ${port}`);
 });
