@@ -5,10 +5,10 @@ const http = require('http');
 const socketIo = require('socket.io');
 
 const port = process.env.PORT;
+console.log(process.env)
 const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
-
 app.use(express.json());
 
 let totalCount = 0;

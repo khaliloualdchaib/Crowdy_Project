@@ -5,7 +5,7 @@ const { switchMap, map } = require('rxjs/operators');
 const axios = require('axios');
 const FormData = require('form-data');
 
-const imageUrl = 'http://localhost:30001/crowdy/image/upload';
+const imageUrl = 'http://localhost:8001/crowdy/image/upload';
 const imagesDirectory = path.join(__dirname, 'images_test');
 const sendImage = async (cameraId, image) => {
   try {

@@ -6,6 +6,7 @@ const FormData = require('form-data');
 const fs = require('fs');
 
 const port = process.env.PORT;
+console.log(process.env)
 const app = express();
 const upload = multer({ dest: 'uploads/' });
 
@@ -25,14 +26,23 @@ const imageUpload$ = new Observable((observer) => {
 imageUpload$.subscribe(async (imageData) => {
     try {
         const { camera, fileContent, originalname } = imageData;
-        const headcountURL = "http://head-count-service:8002/crowdy/image/count";
+        const headcount_ip = process.env["HEAD_COUNT_APP_CLUSTERIP_SERVICE_HOST"]
+        const headcount_port = process.env["HEAD_COUNT_APP_CLUSTERIP_SERVICE_PORT"]
+
+        const global_headcount_ip = process.env["GLOBAL_HEAD_COUNT_APP_CLUSTERIP_SERVICE_HOST"]
+        const global_headcount_port = process.env["GLOBAL_HEAD_COUNT_APP_CLUSTERIP_SERVICE_PORT"]
+
+        const specific_headcount_ip = process.env["SPECIFIC_HEAD_COUNT_APP_CLUSTERIP_SERVICE_HOST"]
+        const specific_headcount_port = process.env["SPECIFIC_HEAD_COUNT_APP_CLUSTERIP_SERVICE_PORT"]
+
+        const headcountURL = `http://${headcount_ip}:${headcount_port}/crowdy/image/count`
         const formData1 = new FormData();
         formData1.append('imageFileField', fileContent, { filename: originalname });
         const response1 = await axios.post(headcountURL, formData1);
         const countValue = response1.data.count;
-        const globalheadcountURL = "http://global-head-count-service:8003/crowdy/global/count";
+        const globalheadcountURL = `http://${global_headcount_ip}:${global_headcount_port}/crowdy/global/count`;
         const response2 = await axios.post(globalheadcountURL, { count: countValue });
-        const specificheadcountURL = "http://specific-head-count-service:8004/crowdy/specific/count";
+        const specificheadcountURL = `http://${specific_headcount_ip}:${specific_headcount_port}/crowdy/specific/count`;
         const formData2 = new FormData();
         formData2.append("cameraId", camera)
         formData2.append("count", countValue)

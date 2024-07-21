@@ -1,14 +1,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: global-head-count-service
-  labels:
-    app.kubernetes.io/name: global-head-count-app
-    app.kubernetes.io/instance: global-head-count-deploy
+  name: global-head-count-app-clusterip
 spec:
   selector:
-    app.kubernetes.io/name: global-head-count-app
-    app.kubernetes.io/instance: global-head-count-deploy
+    app: global-head-count-app-pod
   ports:
     - port: 8003
       targetPort: 8003
