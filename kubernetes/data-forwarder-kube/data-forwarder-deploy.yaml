@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: global-head-count-deploy
+  name: data-forwarder-deploy
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: global-head-count-app-pod
+      app: data-forwarder-app-pod
   template:
     metadata:
       labels:
-        app: global-head-count-app-pod
+        app: data-forwarder-app-pod
     spec:
       containers:
-        - name: global-head-count-app-container
-          image: global-head-count:global
+        - name: data-forwarder-app-container
+          image: data:forwarder
           ports:
-            - containerPort: 8003
+            - containerPort: 8009
           imagePullPolicy: Never
           resources:
             limits:

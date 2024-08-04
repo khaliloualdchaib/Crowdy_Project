@@ -4,10 +4,12 @@ const multer = require('multer');
 const { Observable } = require('rxjs');
 const FormData = require('form-data');
 const fs = require('fs');
+const exp = require('constants');
 
 const port = process.env.PORT;
 console.log(process.env)
 const app = express();
+app.use(express.json())
 const upload = multer({ dest: 'uploads/' });
 
 const imageUpload$ = new Observable((observer) => {
@@ -29,25 +31,20 @@ imageUpload$.subscribe(async (imageData) => {
         const headcount_ip = process.env["HEAD_COUNT_APP_LOAD_BALANCER_SERVICE_HOST"]
         const headcount_port = process.env["HEAD_COUNT_APP_LOAD_BALANCER_SERVICE_PORT"]
 
-        const global_headcount_ip = process.env["GLOBAL_HEAD_COUNT_APP_CLUSTERIP_SERVICE_HOST"]
-        const global_headcount_port = process.env["GLOBAL_HEAD_COUNT_APP_CLUSTERIP_SERVICE_PORT"]
-
-        const specific_headcount_ip = process.env["SPECIFIC_HEAD_COUNT_APP_CLUSTERIP_SERVICE_HOST"]
-        const specific_headcount_port = process.env["SPECIFIC_HEAD_COUNT_APP_CLUSTERIP_SERVICE_PORT"]
+        const database_ip = process.env["DATABASE_APP_CLUSTERIP_SERVICE_HOST"]
+        const database_port = process.env["DATABASE_APP_CLUSTERIP_SERVICE_PORT"]
 
         const headcountURL = `http://${headcount_ip}:${headcount_port}/crowdy/image/count`
         const formData1 = new FormData();
         formData1.append('imageFileField', fileContent, { filename: originalname });
         const response1 = await axios.post(headcountURL, formData1);
         const countValue = response1.data.count;
-        const globalheadcountURL = `http://${global_headcount_ip}:${global_headcount_port}/crowdy/global/count`;
-        const response2 = await axios.post(globalheadcountURL, { count: countValue });
-        const specificheadcountURL = `http://${specific_headcount_ip}:${specific_headcount_port}/crowdy/specific/count`;
+        const databaseURL = `http://${database_ip}:${database_port}/crowdy/count`;
         const formData2 = new FormData();
         formData2.append("cameraId", camera)
         formData2.append("count", countValue)
         formData2.append('imageFileField', fileContent, { filename: originalname });
-        const response3 = await axios.post(specificheadcountURL, formData2)
+        const response3 = await axios.post(databaseURL, formData2)
         console.log(`Image processed for camera ${camera}`);
     } catch (error) {
         console.error(error.message);

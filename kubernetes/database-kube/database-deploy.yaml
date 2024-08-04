@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: specific-head-count-deploy
+  name: database-deploy
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: specific-head-count-app-pod
+      app: database-app-pod
   template:
     metadata:
       labels:
-        app: specific-head-count-app-pod
+        app: database-app-pod
     spec:
       containers:
-        - name: specific-head-count-app-container
-          image: specific-head-count:specific
+        - name: database-app-container
+          image: data:base
           ports:
-            - containerPort: 8004
+            - containerPort: 8003
           imagePullPolicy: Never
           resources:
             limits:
