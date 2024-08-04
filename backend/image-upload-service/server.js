@@ -26,8 +26,8 @@ const imageUpload$ = new Observable((observer) => {
 imageUpload$.subscribe(async (imageData) => {
     try {
         const { camera, fileContent, originalname } = imageData;
-        const headcount_ip = process.env["HEAD_COUNT_APP_CLUSTERIP_SERVICE_HOST"]
-        const headcount_port = process.env["HEAD_COUNT_APP_CLUSTERIP_SERVICE_PORT"]
+        const headcount_ip = process.env["HEAD_COUNT_APP_LOAD_BALANCER_SERVICE_HOST"]
+        const headcount_port = process.env["HEAD_COUNT_APP_LOAD_BALANCER_SERVICE_PORT"]
 
         const global_headcount_ip = process.env["GLOBAL_HEAD_COUNT_APP_CLUSTERIP_SERVICE_HOST"]
         const global_headcount_port = process.env["GLOBAL_HEAD_COUNT_APP_CLUSTERIP_SERVICE_PORT"]

@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: head-count-app-clusterip
+  name: head-count-app-load-balancer
 spec:
   selector:
     app: head-counting-app-pod
   ports:
     - port: 8002
       targetPort: 8002
-  type: ClusterIP
+  type: LoadBalancer
