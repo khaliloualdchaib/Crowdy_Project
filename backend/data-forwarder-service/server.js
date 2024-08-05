@@ -1,36 +1,52 @@
 const express = require("express");
-const { io } = require("socket.io-client");
+const multer = require("multer");
+const http = require("http");
+const socketIo = require("socket.io");
+const cors = require("cors");
+
 const port = process.env.PORT;
 
 const app = express();
-
-const global_headcount_ip =
-  process.env["GLOBAL_HEAD_COUNT_APP_CLUSTERIP_SERVICE_HOST"];
-const global_headcount_port =
-  process.env["GLOBAL_HEAD_COUNT_APP_CLUSTERIP_SERVICE_PORT"];
-
-const specific_headcount_ip =
-  process.env["SPECIFIC_HEAD_COUNT_APP_CLUSTERIP_SERVICE_HOST"];
-const specific_headcount_port =
-  process.env["SPECIFIC_HEAD_COUNT_APP_CLUSTERIP_SERVICE_PORT"];
-
-// Connect to the original server
-const socket = io(`http://${global_headcount_ip}:${global_headcount_port}`);
-
-// Listen for the 'totalCountUpdate' event
-socket.on("totalCountUpdate", (totalCount) => {
-  console.log("Total Count from server:", totalCount);
+const server = http.createServer(app);
+const io = socketIo(server, {
+  cors: {
+    origin: "*", // Allow all origins
+    methods: ["GET", "POST"], // Allow these HTTP methods
+  },
 });
 
-socket.on("connect", () => {
-  console.log("Connected to the original server");
+app.use(cors())
+
+const storage = multer.memoryStorage();
+const upload = multer({
+  storage: storage,
+  limits: {
+    fieldSize: 25 * 1024 * 1024, // 25 MB limit for field size
+  },
 });
 
-socket.on("disconnect", () => {
-  console.log("Disconnected from the original server");
+app.post("/crowdy/forward", upload.none(), (req, res) => {
+  const { cameras, TotalCounter } = req.body;
+  const cameraData = JSON.parse(cameras);
+
+  console.log("Received data:");
+  console.log("Total Count:", TotalCounter);
+  for (const [key, value] of Object.entries(cameraData)) {
+    console.log(`Camera ID: ${key}, Data:`, value);
+  }
+  if(TotalCounter)
+  io.emit("new_data", { cameras: cameraData, totalCount: TotalCounter });
+
+  res.status(200).json({ status: "success" });
 });
 
-// Start the client server
-app.listen(port, () => {
-  console.log(`Client server running on port ${port}`);
+server.listen(port, () => {
+  console.log(`Forwarder server running on port ${port}`);
+});
+
+io.on("connection", (socket) => {
+  console.log("New client connected");
+  socket.on("disconnect", () => {
+    console.log("Client disconnected");
+  });
 });
