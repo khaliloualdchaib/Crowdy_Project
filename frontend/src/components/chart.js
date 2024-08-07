@@ -1,49 +1,69 @@
-import React from 'react';
-import { Bar } from 'react-chartjs-2';
-import { Chart, CategoryScale, LinearScale, BarController, BarElement } from 'chart.js';
+import React, { useEffect, useState } from 'react';
+import { Bar } from "react-chartjs-2";
+import {
+  Chart,
+  CategoryScale,
+  LinearScale,
+  BarController,
+  BarElement,
+} from "chart.js";
 
 Chart.register(CategoryScale, LinearScale, BarController, BarElement);
 
-const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
-
-export const data = {
-  labels,
-  datasets: [
-    {
-      label: 'Dataset 1',
-      data: [8, 15, 6, 9, 10, 5, 12],
-      backgroundColor: 'rgba(255, 99, 132, 0.5)',
-    },
-  ],
+const dataFormat = (headcounts) => {
+  const labels = Array.from({ length: headcounts.length }, (_, i) => i + 1);
+  return {
+    labels: labels,
+    datasets: [
+      {
+        label: "Head Count",
+        data: headcounts,
+        backgroundColor: "rgba(255, 99, 132, 0.2)",
+        borderColor: "rgba(255, 99, 132, 1)",
+        borderWidth: 1,
+      },
+    ],
+  };
 };
 
 const options = {
   responsive: true,
-  maintainAspectRatio: false, 
-  plugins: {
-    legend: {
-      position: 'top',
-    },
-    title: {
-      display: true,
-      text: 'Chart.js Bar Chart',
-    },
-  },
+  maintainAspectRatio: false,
   scales: {
     x: {
-      type: 'category',
-      labels: labels,
+      type: "category",
+      title: {
+        display: true,
+        text: "Every 30 Seconds",
+        color: "black",
+      },
+      ticks: {
+        color: "black",
+      },
     },
     y: {
       beginAtZero: true,
+      title: {
+        display: true,
+        text: "Head Count",
+        color: "black",
+      },
+      ticks: {
+        color: "black",
+      },
     },
   },
 };
 
-function MyChart() {
+function MyChart({ totalCounts }) {
+  // Convert totalCounts to the format expected by Chart.js
+  const chartData = dataFormat(totalCounts);
+
   return (
-    <div className='text' style={{ height: '96vh', width: '50vw' }}>
-      <Bar data={data} options={options}/>
+    <div className="flex items-center justify-center h-screen bg-white">
+      <div className="h-[90%] w-[90%]">
+        <Bar data={chartData} options={options} />
+      </div>
     </div>
   );
 }

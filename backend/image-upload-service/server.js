@@ -31,8 +31,8 @@ imageUpload$.subscribe(async (imageData) => {
         const headcount_ip = process.env["HEAD_COUNT_APP_LOAD_BALANCER_SERVICE_HOST"]
         const headcount_port = process.env["HEAD_COUNT_APP_LOAD_BALANCER_SERVICE_PORT"]
 
-        const database_ip = process.env["DATABASE_APP_CLUSTERIP_SERVICE_HOST"]
-        const database_port = process.env["DATABASE_APP_CLUSTERIP_SERVICE_PORT"]
+        const database_ip = process.env["DATABASE_APP_LOAD_BALANCER_SERVICE_HOST"]
+        const database_port = process.env["DATABASE_APP_LOAD_BALANCER_SERVICE_PORT"]
 
         const headcountURL = `http://${headcount_ip}:${headcount_port}/crowdy/image/count`
         const formData1 = new FormData();

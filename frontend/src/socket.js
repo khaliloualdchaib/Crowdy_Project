@@ -1,5 +1,5 @@
 import { io } from "socket.io-client";
 
-const socket = io("http://localhost:8009"); // Adjust the port if necessary
+const socket = io("http://localhost:8003");
 
 export default socket;

@@ -16,13 +16,8 @@ cd frontend || exit 1
 docker build --tag dashboard:frontend .
 cd -
 
-cd backend/data-forwarder-service || exit 1
-docker build --tag data:forwarder .
-cd -
-
 cd kubernetes || exit 1
 kubectl apply -f frontend-kube/
 kubectl apply -f database-kube/
 kubectl apply -f head-count-kube/
 kubectl apply -f image-upload-kube/
-kubectl apply -f data-forwarder-kube/
