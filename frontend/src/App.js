@@ -5,7 +5,6 @@ import { Route, Routes } from "react-router-dom";
 import MyChart from "./components/chart";
 import Cameras from "./components/cameras";
 import socket from "./socket";
-import axios from "axios";
 
 function App() {
   const [cameras, setCameras] = useState({});

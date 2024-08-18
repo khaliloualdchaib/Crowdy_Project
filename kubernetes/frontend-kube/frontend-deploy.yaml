@@ -20,8 +20,8 @@ spec:
           imagePullPolicy: Never
           resources:
             limits:
-              memory: "350Mi"
-              cpu: "128m"
+              memory: "512Mi"      # Increased from 350Mi
+              cpu: "500m"          # Increased from 128m
             requests:
-              memory: "200Mi"
-              cpu: "80m"
+              memory: "256Mi"      # Increased from 200Mi
+              cpu: "250m"          # Increased from 80m
