@@ -19,10 +19,10 @@ cd -
 
 # Apply the Kubernetes manifests
 cd kubernetes || exit 1
-kubectl apply -f frontend-kube/
 kubectl apply -f database-kube/
 kubectl apply -f head-count-kube/
 kubectl apply -f image-upload-kube/
+kubectl apply -f frontend-kube/
 kubectl get deployment metrics-server -n kube-system -o yaml > metrics-server.yaml
 kubectl apply -f metrics-server.yaml
 

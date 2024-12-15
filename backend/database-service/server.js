@@ -31,21 +31,17 @@ app.use(cors());
 const cameraCountSubject = new Subject();
 
 // Endpoint to handle incoming data
-app.post(
-  "/crowdy/count",
-  upload.single("imageFileField"),
-  (req, res) => {
-    const { cameraId, count } = req.body;
-    const fileContent = req.file.buffer;
-    cameraCountSubject.next({
-      cameraId,
-      fileContent,
-      count: parseInt(count, 10),
-      timestamp: Date.now(),
-    });
-    res.status(200).json({ status: "success" });
-  }
-);
+app.post("/crowdy/count", upload.single("imageFileField"), (req, res) => {
+  const { cameraId, count } = req.body;
+  const fileContent = req.file.buffer;
+  cameraCountSubject.next({
+    cameraId,
+    fileContent,
+    count: parseInt(count, 10),
+    timestamp: Date.now(),
+  });
+  res.status(200).json({ status: "success" });
+});
 
 // Function to emit data to clients
 const emitData = () => {
@@ -58,12 +54,13 @@ cameraCountSubject.subscribe(async (imageData) => {
   const { cameraId, fileContent, count } = imageData;
   // Check if the camera ID already exists in the map
   if (cameraDataMap.has(cameraId)) {
-    // Update the existing data by adding the new count
+    // Update the existing data by adding the new count and replacing the image
     const existingData = cameraDataMap.get(cameraId);
     existingData.count += count;
+    existingData.photo = fileContent; // Update the image here
     cameraDataMap.set(cameraId, existingData);
   } else {
-    // If the camera ID is new, initialize it with the given count
+    // If the camera ID is new, initialize it with the given count and image
     cameraDataMap.set(cameraId, { photo: fileContent, count });
   }
   // Update the total count
